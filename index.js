@@ -1,7 +1,7 @@
 const path = require('path');
 const { Command } = require('commander');
 
-const { showSuccessMsgWithData, showWarnMsg, showErrorMsg } = require('./message.js');
+const { showSuccessMsgWithData, showWarnMsg, showErrorMsg } = require('./helpers/message.js');
 const { listContacts, getContactById, removeContact, addContact } = require('./contacts.js');
 
 const contactsPath = path.join(__dirname, './db/contacts.json');

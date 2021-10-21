@@ -1,28 +1,9 @@
 const fs = require('fs/promises');
 const path = require('path');
+const { readData, writeData, isIdInContacts, isNameInContacts } = require('./helpers/contacts-helpers.js');
 
 const contactsPath = path.join(__dirname, './db/contacts.json');
 
-//#region HELPER-functions
-const readData = async (filePath) => {
-  const data = await fs.readFile(filePath, 'utf-8');
-  return JSON.parse(data);
-};
-
-const writeData = async (filePath, data) => {
-  await fs.writeFile(filePath, JSON.stringify(data, null, 2));
-};
-
-const isIdInContacts = async (contacts, contactId) => {
-  return (await contacts.findIndex(({ id }) => (Number(id) === Number(contactId)) !== -1)) ? true : false;
-};
-
-const isNameInContacts = async (contacts, newName) => {
-  return await contacts.some(({ name }) => name === newName);
-};
-//#endregion
-
-//#region CONTACTS-functions
 const listContacts = async () => {
   return await readData(contactsPath);
 };
@@ -68,7 +49,6 @@ const addContact = async (name, email, phone) => {
 
   return newContact;
 };
-//#endregion
 
 module.exports = {
   listContacts,
