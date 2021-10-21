@@ -40,7 +40,7 @@ const argv = program.opts();
       case 'add':
         const newContact = await addContact(name, email, phone);
 
-        if (newContact === false) {
+        if (!newContact) {
           return showWarnMsg(`Contact "${name}" already exists. Try another name.`);
         }
 

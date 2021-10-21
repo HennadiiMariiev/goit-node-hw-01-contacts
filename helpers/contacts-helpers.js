@@ -9,17 +9,14 @@ const writeData = async (filePath, data) => {
   await fs.writeFile(filePath, JSON.stringify(data, null, 2));
 };
 
-const isIdInContacts = async (contacts, contactId) => {
-  return (await contacts.findIndex(({ id }) => (Number(id) === Number(contactId)) !== -1)) ? true : false;
-};
+const searchContactById = async (contacts, contactId) =>
+  await contacts.find(({ id }) => Number(id) === Number(contactId));
 
-const isNameInContacts = async (contacts, newName) => {
-  return await contacts.some(({ name }) => name === newName);
-};
+const isNameInContacts = async (contacts, newName) => await contacts.some(({ name }) => name === newName);
 
 module.exports = {
   readData,
   writeData,
-  isIdInContacts,
+  searchContactById,
   isNameInContacts,
 };

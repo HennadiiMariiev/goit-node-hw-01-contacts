@@ -1,31 +1,24 @@
-const fs = require('fs/promises');
 const path = require('path');
-const { readData, writeData, isIdInContacts, isNameInContacts } = require('./helpers/contacts-helpers.js');
+const { v4: uuidv4 } = require('uuid');
+const { readData, writeData, searchContactById, isNameInContacts } = require('./helpers/contacts-helpers.js');
 
 const contactsPath = path.join(__dirname, './db/contacts.json');
 
-const listContacts = async () => {
-  return await readData(contactsPath);
-};
+const listContacts = async () => await readData(contactsPath);
 
 const getContactById = async (contactId) => {
   const contacts = await readData(contactsPath);
-
-  if (!isIdInContacts(contacts, contactId)) {
-    return false;
-  }
-
-  return contacts.filter(({ id }) => Number(id) === Number(contactId));
+  return await searchContactById(contacts, contactId);
 };
 
 const removeContact = async (contactId) => {
   const contacts = await readData(contactsPath);
+  const removedContact = await !searchContactById(contacts, contactId);
 
-  if (!isIdInContacts(contacts, contactId)) {
-    return false;
+  if (!removedContact) {
+    return null;
   }
 
-  const removedContact = contacts.find(({ id }) => Number(id) === Number(contactId));
   const refreshedContacts = contacts.filter(({ id }) => Number(id) !== Number(contactId));
 
   await writeData(contactsPath, refreshedContacts);
@@ -37,11 +30,10 @@ const addContact = async (name, email, phone) => {
   const contacts = await readData(contactsPath);
 
   if (await isNameInContacts(contacts, name)) {
-    return false;
+    return null;
   }
 
-  const newId = contacts.reduce((prevId, { id }) => (Number(id) > prevId ? Number(id) : prevId), 0) + 1;
-  const newContact = { id: newId, name, email, phone };
+  const newContact = { id: uuidv4(), name, email, phone };
 
   contacts.push(newContact);
 
