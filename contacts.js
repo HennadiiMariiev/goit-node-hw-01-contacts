@@ -1,10 +1,18 @@
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
-const { readData, writeData, searchContactById, isNameInContacts } = require('./helpers/contacts-helpers.js');
+const {
+  readData,
+  writeData,
+  searchContactById,
+  isNameInContacts,
+  isPhoneInContacts,
+  isEmailInContacts,
+  editContact,
+} = require('./helpers/contacts-helpers.js');
 
 const contactsPath = path.join(__dirname, './db/contacts.json');
 
-const listContacts = async () => await readData(contactsPath);
+const listContacts = () => readData(contactsPath);
 
 const getContactById = async (contactId) => {
   const contacts = await readData(contactsPath);
@@ -29,7 +37,7 @@ const removeContact = async (contactId) => {
 const addContact = async (name, email, phone) => {
   const contacts = await readData(contactsPath);
 
-  if (await isNameInContacts(contacts, name)) {
+  if ((await isPhoneInContacts(contacts, phone)) || (await isEmailInContacts(contacts, email))) {
     return null;
   }
 
@@ -42,9 +50,31 @@ const addContact = async (name, email, phone) => {
   return newContact;
 };
 
+const changeContact = async (contactId, name, email, phone) => {
+  if (contactId === void 0) {
+    return null;
+  }
+
+  const contacts = await readData(contactsPath);
+  const searchedContact = await searchContactById(contacts, contactId);
+
+  if (!searchedContact) {
+    return null;
+  }
+
+  const searchedIndex = await contacts.findIndex(({ id }) => Number(id) === Number(contactId));
+
+  contacts.splice(searchedIndex, 1, editContact(searchedContact, { name, email, phone }));
+
+  await writeData(contactsPath, contacts);
+
+  return searchedContact;
+};
+
 module.exports = {
   listContacts,
   getContactById,
   removeContact,
   addContact,
+  changeContact,
 };

@@ -14,9 +14,24 @@ const searchContactById = async (contacts, contactId) =>
 
 const isNameInContacts = async (contacts, newName) => await contacts.some(({ name }) => name === newName);
 
+const isPhoneInContacts = async (contacts, newPhone) => await contacts.some(({ phone }) => phone === newPhone);
+
+const isEmailInContacts = async (contacts, newEmail) => await contacts.some(({ email }) => email === newEmail);
+
+const editContact = (contact, newData) => {
+  Object.keys(newData).forEach((key) => {
+    if (newData[key]) contact[key] = newData[key];
+  });
+
+  return contact;
+};
+
 module.exports = {
   readData,
   writeData,
   searchContactById,
   isNameInContacts,
+  isPhoneInContacts,
+  isEmailInContacts,
+  editContact,
 };

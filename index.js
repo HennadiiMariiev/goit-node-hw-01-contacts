@@ -2,7 +2,7 @@ const path = require('path');
 const { Command } = require('commander');
 
 const { showSuccessMsgWithData, showWarnMsg, showErrorMsg } = require('./helpers/message.js');
-const { listContacts, getContactById, removeContact, addContact } = require('./contacts.js');
+const { listContacts, getContactById, removeContact, addContact, changeContact } = require('./contacts.js');
 
 const contactsPath = path.join(__dirname, './db/contacts.json');
 
@@ -41,7 +41,7 @@ const argv = program.opts();
         const newContact = await addContact(name, email, phone);
 
         if (!newContact) {
-          return showWarnMsg(`Contact "${name}" already exists. Try another name.`);
+          return showWarnMsg(`Contact with this email or phone already exists.`);
         }
 
         showSuccessMsgWithData(`New contact added.`, newContact);
@@ -55,6 +55,16 @@ const argv = program.opts();
         }
 
         showSuccessMsgWithData(`Contact removed.`, removedContact);
+        break;
+
+      case 'change':
+        const changedContact = await changeContact(id, name, email, phone);
+
+        if (!changedContact) {
+          return showWarnMsg(`Can't edit: Contact with ID "${id}" not found.`);
+        }
+
+        showSuccessMsgWithData(`Contact changed.`, changedContact);
         break;
 
       default:
