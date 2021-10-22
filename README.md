@@ -1,6 +1,6 @@
 ## screenshots
 ### list
-![list of contacts](https://monosnap.com/file/wc6TKGB0yvKa56dXi9M3WrJMDGXqQi)
+![list of contacts](https://github.com/HennadiiMariiev/goit-node-hw-01-contacts/blob/master/screen/add.png)
 
 ### get
 ![get contacts by ID](https://monosnap.com/file/p19qsse4crnLAhyC3di7rRmxIpHpGg)
