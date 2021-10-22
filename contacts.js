@@ -21,7 +21,7 @@ const getContactById = async (contactId) => {
 
 const removeContact = async (contactId) => {
   const contacts = await readData(contactsPath);
-  const removedContact = await !searchContactById(contacts, contactId);
+  const removedContact = await searchContactById(contacts, contactId);
 
   if (!removedContact) {
     return null;
